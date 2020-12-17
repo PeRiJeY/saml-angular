@@ -24,8 +24,7 @@ public class SamlWithRelayStateEntryPoint extends SAMLEntryPoint {
         // So you can let the caller pass you some special param which can be used to build an on-the-fly custom
         // relay state param
 
-
-        ssoProfileOptions.setRelayState("http://localhost:4200");
+        ssoProfileOptions.setRelayState("http://samlintegration.sandetel.int:4200/");
 
         return ssoProfileOptions;
     }

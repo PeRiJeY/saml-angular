@@ -1,3 +1,4 @@
-export interface ApiToken{
-  token: string
+export interface ApiToken {
+  token: string;
+  sessionId: string;
 }

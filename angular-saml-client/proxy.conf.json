@@ -1,9 +1,9 @@
 {
   "/service": {
-    "target": "http://localhost:8080",
+    "target": "http://samlintegration.sandetel.int:8080",
     "secure": false,
     "pathRewrite": {
-      "^/service": ""
+      "^/service": "/SpringSAMLIntegrationExample"
     }
   }
 }

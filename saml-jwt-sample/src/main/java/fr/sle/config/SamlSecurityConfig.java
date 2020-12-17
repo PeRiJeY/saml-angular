@@ -51,6 +51,7 @@ import org.springframework.security.saml.websso.WebSSOProfileImpl;
 import org.springframework.security.saml.websso.WebSSOProfileOptions;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -60,20 +61,30 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author slemoine
  */
 @Configuration
 public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
-
+	
     @Bean
     public WebSSOProfileOptions defaultWebSSOProfileOptions() {
         WebSSOProfileOptions webSSOProfileOptions = new WebSSOProfileOptions();
@@ -104,6 +115,23 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
     public SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler() {
         SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler =
                 new SAMLRelayStateSuccessHandler();
+        successRedirectHandler.setRedirectStrategy(new RedirectStrategy() {
+			
+			@Override
+			public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
+				
+				String finalUrl = url;
+				Enumeration<String> listCookies = request.getHeaders("Cookie");
+				if (listCookies != null && listCookies.hasMoreElements()) {
+					String cookie = listCookies.nextElement();
+					finalUrl += "?cookie=" + cookie;
+				}
+				
+				finalUrl = response.encodeRedirectURL(finalUrl);
+				
+				response.sendRedirect(finalUrl);
+			}
+		});
         return successRedirectHandler;
     }
 
@@ -151,8 +179,8 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public MetadataGenerator metadataGenerator() {
         MetadataGenerator metadataGenerator = new MetadataGenerator();
-        metadataGenerator.setEntityId("AngularSamlJwtSampleEntityId2");
-        metadataGenerator.setEntityBaseURL("http://localhost:8080");
+        metadataGenerator.setEntityId("saml.samlintegration.sandetel.int");
+        metadataGenerator.setEntityBaseURL("http://samlintegration.sandetel.int:8080/SpringSAMLIntegrationExample");
         metadataGenerator.setExtendedMetadata(extendedMetadata());
         metadataGenerator.setIncludeDiscoveryExtension(false);
         metadataGenerator.setKeyManager(keyManager());
@@ -161,11 +189,11 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public KeyManager keyManager() {
-        ClassPathResource storeFile = new ClassPathResource("/saml-keystore.jks");
-        String storePass = "samlstorepass";
+        ClassPathResource storeFile = new ClassPathResource("/samlKeystoreApollo.jks");
+        String storePass = "nalle123";
         Map<String, String> passwords = new HashMap<>();
-        passwords.put("mykeyalias", "mykeypass");
-        return new JKSKeyManager(storeFile, storePass, passwords, "mykeyalias");
+        passwords.put("apollo", "nalle123");
+        return new JKSKeyManager(storeFile, storePass, passwords, "apollo");
     }
 
     @Bean
@@ -281,10 +309,10 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
     public SAMLContextProviderImpl contextProvider() {
         SAMLContextProviderLB samlContextProviderLB = new SAMLContextProviderLB();
         samlContextProviderLB.setScheme("http");
-        samlContextProviderLB.setServerName("localhost");
+        samlContextProviderLB.setServerName("samlintegration.sandetel.int");
         samlContextProviderLB.setServerPort(8080);
         samlContextProviderLB.setIncludeServerPortInRequestURL(true);
-        samlContextProviderLB.setContextPath("/");
+        samlContextProviderLB.setContextPath("/SpringSAMLIntegrationExample");
         return samlContextProviderLB;
     }
 
@@ -326,7 +354,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
         Timer backgroundTaskTimer = new Timer(true);
 
         ResourceBackedMetadataProvider resourceBackedMetadataProvider =
-                new ResourceBackedMetadataProvider(backgroundTaskTimer, new ClasspathResource("/ssocircle-metadata.xml"));
+                new ResourceBackedMetadataProvider(backgroundTaskTimer, new ClasspathResource("/proxyclavePruebasQAA2.xml"));
 
         resourceBackedMetadataProvider.setParserPool(parserPool());
 

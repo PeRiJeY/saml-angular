@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://ws050.juntadeandalucia.es/proxyclavepru/metadata/federation/production/ClaveSEQAA4">
+  <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#" use="signing">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIIDYDCCAkgCCQD/SiwcV2+CkzANBgkqhkiG9w0BAQsFADByMQswCQYDVQQGEwJFUzEOMAwGA1UECAwFU3BhaW4xEDAOBgNVBAcMB1NldmlsbGUxDDAKBgNVBAoMA0pkQTEMMAoGA1UECwwDSmRhMSUwIwYDVQQDDBxTZWxmU2lnbmVkIFNBTUx2MiBQcm94eUNsQHZlMB4XDTE3MDkwNTA3MDIzNloXDTI3MDkwMzA3MDIzNlowcjELMAkGA1UEBhMCRVMxDjAMBgNVBAgMBVNwYWluMRAwDgYDVQQHDAdTZXZpbGxlMQwwCgYDVQQKDANKZEExDDAKBgNVBAsMA0pkYTElMCMGA1UEAwwcU2VsZlNpZ25lZCBTQU1MdjIgUHJveHlDbEB2ZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAODi32zdNcpsPrnN26aTkKvNcTl/HOx457Rpd+fiFMEbRmyLlexg/Oe8EgQsbAkjjuzkUTQpoonvTJfiyK65HHdp3mHkd09Nz+LI9aazsJEkBJ5l+9Uy0VdhMYa69sBiF2042R2WfkKrz0bHQNPkEVXviTqyu+KHI6KC23/sTU3JIwEL4r8V0TtK5DpoUjXIv87e+Y16hDupngMYRVC+Fqt5txuTNyG3a2sdjQnpyz1DgMJcWnIUi9QA1GJt6g+Vxfr7QcxVEd9d90b1TSZCqpeOMlhCQGfn4G7Gw96ehuTalRnHXB1Us69gKu7LZd/OhcuZRbrAHc9zxX1Hlh8rPVMCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAYkQR+OZoZsfP5S+8KmVzhlbxY7edUDXaKaXwd1OcgOmEKdU/lCjIG41BwTwMf/0HsXSWkFCrPX8II/9GdN5028+1IJg6MfMeIZwSUBHYahFOzNHz2HguPKkEmmmGIIxJ9jwEU/PU4//QJ0vKGMc/xvEu6RW3CItEM6mBiq5rSr5Xw9RI0IddN5sCfErJmjGSDDumx/EtGJbMrygwVZSJYx8LPV53BtBUj1W66YqfeErwghgB8JMRP6IKjb0wIonWibb5MI9CFRj7WZM97vwvr7K2l6ya5ZXr38Q2F/bNC0uHEU31Q0ShiLjk0XH723ItINbmGLw0iI57v0eWOnpyYA==</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#" use="encryption">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIIDYDCCAkgCCQD/SiwcV2+CkzANBgkqhkiG9w0BAQsFADByMQswCQYDVQQGEwJFUzEOMAwGA1UECAwFU3BhaW4xEDAOBgNVBAcMB1NldmlsbGUxDDAKBgNVBAoMA0pkQTEMMAoGA1UECwwDSmRhMSUwIwYDVQQDDBxTZWxmU2lnbmVkIFNBTUx2MiBQcm94eUNsQHZlMB4XDTE3MDkwNTA3MDIzNloXDTI3MDkwMzA3MDIzNlowcjELMAkGA1UEBhMCRVMxDjAMBgNVBAgMBVNwYWluMRAwDgYDVQQHDAdTZXZpbGxlMQwwCgYDVQQKDANKZEExDDAKBgNVBAsMA0pkYTElMCMGA1UEAwwcU2VsZlNpZ25lZCBTQU1MdjIgUHJveHlDbEB2ZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAODi32zdNcpsPrnN26aTkKvNcTl/HOx457Rpd+fiFMEbRmyLlexg/Oe8EgQsbAkjjuzkUTQpoonvTJfiyK65HHdp3mHkd09Nz+LI9aazsJEkBJ5l+9Uy0VdhMYa69sBiF2042R2WfkKrz0bHQNPkEVXviTqyu+KHI6KC23/sTU3JIwEL4r8V0TtK5DpoUjXIv87e+Y16hDupngMYRVC+Fqt5txuTNyG3a2sdjQnpyz1DgMJcWnIUi9QA1GJt6g+Vxfr7QcxVEd9d90b1TSZCqpeOMlhCQGfn4G7Gw96ehuTalRnHXB1Us69gKu7LZd/OhcuZRbrAHc9zxX1Hlh8rPVMCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAYkQR+OZoZsfP5S+8KmVzhlbxY7edUDXaKaXwd1OcgOmEKdU/lCjIG41BwTwMf/0HsXSWkFCrPX8II/9GdN5028+1IJg6MfMeIZwSUBHYahFOzNHz2HguPKkEmmmGIIxJ9jwEU/PU4//QJ0vKGMc/xvEu6RW3CItEM6mBiq5rSr5Xw9RI0IddN5sCfErJmjGSDDumx/EtGJbMrygwVZSJYx8LPV53BtBUj1W66YqfeErwghgB8JMRP6IKjb0wIonWibb5MI9CFRj7WZM97vwvr7K2l6ya5ZXr38Q2F/bNC0uHEU31Q0ShiLjk0XH723ItINbmGLw0iI57v0eWOnpyYA==</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://ws050.juntadeandalucia.es/proxyclavepru/fed/federation/production/ClaveSEQAA4/SAML2/SLOService.php"/>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://ws050.juntadeandalucia.es/proxyclavepru/fed/federation/production/ClaveSEQAA4/SAML2/SSOService.php"/>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://ws050.juntadeandalucia.es/proxyclavepru/fed/federation/production/ClaveSEQAA4/SAML2/SSOService.php"/>
+  </md:IDPSSODescriptor>
+</md:EntityDescriptor>
