@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
   setSessionCookie(sessionId: string) {
     if (sessionId != undefined && sessionId != "") {
       console.log('SessionId: ' + sessionId);
-      document.cookie = "JSESSIONID=" + sessionId;
+      //document.cookie = "JSESSIONID=" + sessionId;
       this.sessionId = sessionId;
     }
   }
@@ -103,6 +103,10 @@ export class AppComponent implements OnInit {
         "Authorization": apiToken
       }
     }).subscribe(r => this.externalServerApiExample = JSON.stringify(r));
+  }
+
+  certificateLogin() {
+    window.location.href="/service/servlet/afirma/login";
   }
 
   samlLogin() {
