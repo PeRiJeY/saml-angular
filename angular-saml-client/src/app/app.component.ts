@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {HttpErrorResponse} from "@angular/common/http/src/response";
-import {ApiToken} from "./ApiToken";
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -45,7 +44,21 @@ export class AppComponent implements OnInit {
     }
   }
 
+  parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+};
+
   handleTokenSuccess(apiToken: string) {
+    const payload = this.parseJwt(apiToken);
+
+    console.log(payload);
+
     localStorage.setItem("apiToken", apiToken);
     this.apiToken = apiToken;
     this.errorMessage = null;
