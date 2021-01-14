@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    AutoScript.httpClient = this.httpClient;
     AutoScript.cargarAppAfirma();
     AutoScript.setServlets(Constants.URL_BASE_SERVICES + "/afirma-signature-storage/StorageService", Constants.URL_BASE_SERVICES + "/afirma-signature-retriever/RetrieveService");
   }
@@ -144,10 +145,11 @@ export class AppComponent implements OnInit {
         "Authorization": apiToken
       },
       responseType: 'blob'
-    }).subscribe(r => this.doPDFtoBase64(r, this.doFirmarPDF, this.showSignResultCallback, this.showErrorCallback));
+    }).subscribe(r => this.doPDFtoBase64(r));
   }
 
-  doPDFtoBase64(binaryResp, callbackProcessPDF, showSignResultCallback, showErrorCallback) {
+  doPDFtoBase64(binaryResp) {
+    var self = this;
     var reader = new FileReader();
     reader.readAsDataURL(binaryResp);
     reader.onloadend = function() {
@@ -156,19 +158,19 @@ export class AppComponent implements OnInit {
       base64data = base64data.substr(base64data.indexOf(',') + 1);
 
       //console.log(base64data);
-      callbackProcessPDF(base64data, showSignResultCallback, showErrorCallback)
+      self.doFirmarPDF(base64data);
     }
   }
 
-  doFirmarPDF(base64data, showSignResultCallback, showErrorCallback) {
+  doFirmarPDF(base64data) {
     try {
       var params = "signaturePositionOnPageLowerLeftX = 100\n" +
             "signaturePositionOnPageLowerLeftY = 25\n" +
             "signaturePositionOnPageUpperRightX = 500\n" +
-            "signaturePositionOnPageUpperRightY = 75\n" +
+            "signaturePositionOnPageUpperRightY = 50\n" +
             "signaturePage = -1\n";
 
-      AutoScript.signAndSaveToFile (
+      /*AutoScript.signAndSaveToFile (
         "sign",
         base64data,
         "SHA1withRSA",
@@ -176,7 +178,15 @@ export class AppComponent implements OnInit {
         params,
         null,
         showSignResultCallback,
-        showErrorCallback);
+        showErrorCallback);*/
+
+        AutoScript.sign(
+					base64data,
+					"SHA1withRSA",
+					"AUTO",
+					params,
+					this.showSignResultCallback,
+					this.showErrorCallback);
 
     } catch(e) {
       try {
@@ -189,7 +199,29 @@ export class AppComponent implements OnInit {
     }
   }
 
-  showSignResultCallback(signatureB64, certificateB64) {
+  showSignResultCallback(docSignedBase64) {
+    /*const source = `data:application/pdf;base64,${docSignedBase64}`;
+    const link = document.createElement("a");
+    link.href = source;
+    link.download = "aaaa_resultado.pdf";
+    link.click();*/
+
+    let apiToken = localStorage.getItem("apiToken");
+
+    const formData = new FormData();
+    formData.append("file", docSignedBase64);
+
+    AutoScript.httpClient.post("http://samlintegration.sandetel.int:8081/obligaciones/api/file", formData,
+      {
+        withCredentials: true,
+        headers: {
+          "Authorization": apiToken != null ? apiToken : ''
+        }
+      }
+      ).subscribe(
+        r => { console.log(r)},
+        error => console.log(error));
+
     console.log("Firma OK");
   }
 
