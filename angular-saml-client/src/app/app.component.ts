@@ -3,6 +3,9 @@ import {HttpClient} from "@angular/common/http";
 import {HttpErrorResponse} from "@angular/common/http/src/response";
 import { ActivatedRoute } from '@angular/router';
 
+declare const AutoScript: any;
+declare const Constants: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -33,7 +36,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    AutoScript.cargarAppAfirma();
+    AutoScript.setServlets(Constants.URL_BASE_SERVICES + "/afirma-signature-storage/StorageService", Constants.URL_BASE_SERVICES + "/afirma-signature-retriever/RetrieveService");
   }
 
   setSessionCookie(sessionId: string) {
@@ -73,7 +77,7 @@ export class AppComponent implements OnInit {
     formData.append("username", 'juange');
     formData.append("password", 'juange');
 
-    this.httpClient.post("/service/auth/login", formData,
+    this.httpClient.post("/backend_auth/auth/login", formData,
       {
         withCredentials: true,
         responseType: 'text'
@@ -86,7 +90,7 @@ export class AppComponent implements OnInit {
   getToken() {
     let apiToken = localStorage.getItem("apiToken");
 
-    this.httpClient.get('/service/auth/token', {
+    this.httpClient.get('/backend_auth/auth/token', {
       responseType: 'text',
     }).subscribe(
         r => this.handleTokenSuccess(r),
@@ -96,7 +100,7 @@ export class AppComponent implements OnInit {
   callApiAuthServer() {
     let apiToken = localStorage.getItem("apiToken");
 
-    this.httpClient.get('/service/api/hello', {
+    this.httpClient.get('/backend_auth/api/hello', {
       responseType: 'text',
       withCredentials : true,
       headers: {
@@ -111,7 +115,7 @@ export class AppComponent implements OnInit {
   callApiExternal() {
     let apiToken = localStorage.getItem("apiToken");
 
-    this.httpClient.get('http://samlintegration.sandetel.int:8081/api/pacientes/1', {
+    this.httpClient.get('/backend/siraoNt/getSiraoNt/1', {
       headers: {
         "Authorization": apiToken
       }
@@ -119,18 +123,78 @@ export class AppComponent implements OnInit {
   }
 
   certificateLogin() {
-    window.location.href="/service/servlet/afirma/login";
+    window.location.href="/backend_auth/servlet/afirma/login";
   }
 
   samlLogin() {
-    window.location.href="/service/saml/login";
+    window.location.href="/backend_auth/saml/login";
   }
 
   logout() {
     console.log('logout');
     localStorage.removeItem('apiToken');
-    this.httpClient.get('/service/saml/logout').subscribe(() => this.logoutSuccess = true);
+    this.httpClient.get('/backend_auth/saml/logout').subscribe(() => this.logoutSuccess = true);
   }
 
+  firmarPDF() {
+    let apiToken = localStorage.getItem("apiToken");
+
+    this.httpClient.get('/backend/api/file', {
+      headers: {
+        "Authorization": apiToken
+      },
+      responseType: 'blob'
+    }).subscribe(r => this.doPDFtoBase64(r, this.doFirmarPDF, this.showSignResultCallback, this.showErrorCallback));
+  }
+
+  doPDFtoBase64(binaryResp, callbackProcessPDF, showSignResultCallback, showErrorCallback) {
+    var reader = new FileReader();
+    reader.readAsDataURL(binaryResp);
+    reader.onloadend = function() {
+      var base64data =  reader.result.toString();
+      //console.log("indice" + base64data.indexOf(','));
+      base64data = base64data.substr(base64data.indexOf(',') + 1);
+
+      //console.log(base64data);
+      callbackProcessPDF(base64data, showSignResultCallback, showErrorCallback)
+    }
+  }
+
+  doFirmarPDF(base64data, showSignResultCallback, showErrorCallback) {
+    try {
+      var params = "signaturePositionOnPageLowerLeftX = 100\n" +
+            "signaturePositionOnPageLowerLeftY = 25\n" +
+            "signaturePositionOnPageUpperRightX = 500\n" +
+            "signaturePositionOnPageUpperRightY = 75\n" +
+            "signaturePage = -1\n";
+
+      AutoScript.signAndSaveToFile (
+        "sign",
+        base64data,
+        "SHA1withRSA",
+        "AUTO",
+        params,
+        null,
+        showSignResultCallback,
+        showErrorCallback);
+
+    } catch(e) {
+      try {
+        console.log("Type: " + AutoScript.getErrorType() + "\nMessage: " + AutoScript.getErrorMessage());
+        console.log("Error: " + e);
+      } catch(ex) {
+        console.log("Error: " + e);
+        console.log("Error: " + ex);
+      }
+    }
+  }
+
+  showSignResultCallback(signatureB64, certificateB64) {
+    console.log("Firma OK");
+  }
+
+  showErrorCallback(errorType, errorMessage) {
+    console.log("Type: " + errorType + "\nMessage: " + errorMessage);
+  }
 
 }
