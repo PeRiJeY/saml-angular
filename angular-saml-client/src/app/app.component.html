@@ -20,9 +20,12 @@
   <button style="margin-top: 15px" (click)=callApiAuthServer()>Auth server API Example</button>
 
   <button style="margin-top: 15px" (click)=callApiExternal()>External server API Example</button>
+  <button style="margin-top: 15px" (click)=callApiPostExternal()>Post External server API Example</button>
 
   <div>4º Firma documento</div>
   <button style="margin-top: 15px" (click)=firmarPDF()>Firma documento</button>
+  <button style="margin-top: 15px" (click)=descargarPDFBase64()>Descargar doc Base64</button>
+  <button style="margin-top: 15px" (click)=descargarPDFBlob()>Descargar doc Blob</button>
 
   <div *ngIf="!logoutSuccess">
 
@@ -39,7 +42,7 @@
     </div>
 
     <div *ngIf="externalServerApiExample" style="margin-top: 15px">
-      External Server API Example: {{ externalServerApiExample }}
+      External Server API Example: {{ JSON.stringify(externalServerApiExample) }}
     </div>
 
   </div>

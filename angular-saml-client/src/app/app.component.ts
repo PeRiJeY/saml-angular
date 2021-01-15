@@ -21,7 +21,9 @@ export class AppComponent implements OnInit {
 
   errorMessage: string;
 
-  externalServerApiExample;
+  JSON;
+
+  externalServerApiExample: JSON;
 
   logoutSuccess: boolean;
 
@@ -30,6 +32,7 @@ export class AppComponent implements OnInit {
   constructor(private httpClient: HttpClient,
       private route: ActivatedRoute) {
 
+    this.JSON = JSON;
     this.route.queryParams.subscribe(params => {
         this.setSessionCookie(params['sessionId']);
     });
@@ -116,11 +119,31 @@ export class AppComponent implements OnInit {
   callApiExternal() {
     let apiToken = localStorage.getItem("apiToken");
 
-    this.httpClient.get('/backend/siraoNt/getSiraoNt/1', {
+    this.httpClient.get<JSON>('/backend/siraoNt/getSiraoNt/1', {
       headers: {
         "Authorization": apiToken
       }
-    }).subscribe(r => this.externalServerApiExample = JSON.stringify(r));
+    }).subscribe(r => this.externalServerApiExample = r);
+  }
+
+  callApiPostExternal() {
+    let apiToken = localStorage.getItem("apiToken");
+
+    let newObj = this.externalServerApiExample;
+    newObj["idNt"] = null;
+
+    AutoScript.httpClient.post("/backend/siraoNt/saveSiraoNt", newObj,
+      {
+        withCredentials: true,
+        headers: {
+          "Authorization": apiToken != null ? apiToken : ''
+        }
+      }
+      ).subscribe(
+        r => { console.log(r)},
+        error => console.log(error));
+
+    console.log("Firma OK");
   }
 
   certificateLogin() {
@@ -137,10 +160,45 @@ export class AppComponent implements OnInit {
     this.httpClient.get('/backend_auth/saml/logout').subscribe(() => this.logoutSuccess = true);
   }
 
-  firmarPDF() {
+  descargarPDFBase64() {
+    let apiToken = localStorage.getItem("apiToken");
+
+    this.httpClient.get('/backend/api/file/base64', {
+      headers: {
+        "Authorization": apiToken
+      },
+      responseType: 'text'
+    }).subscribe(r => {
+      const source = `data:application/pdf;base64,${r}`;
+      const link = document.createElement("a");
+      link.href = source;
+      link.download = "aaaa_resultado.pdf";
+      link.click();
+    });
+  }
+
+  descargarPDFBlob() {
     let apiToken = localStorage.getItem("apiToken");
 
     this.httpClient.get('/backend/api/file', {
+      headers: {
+        "Authorization": apiToken
+      },
+      responseType: 'blob'
+    }).subscribe(r => {
+      var newBlob = new Blob([r], { type: "application/pdf" });
+      const data = window.URL.createObjectURL(newBlob);
+      const link = document.createElement("a");
+      link.href = data;
+      link.download = "aaaa_resultado.pdf";
+      link.click();
+    });
+  }
+
+  firmarPDF() {
+    let apiToken = localStorage.getItem("apiToken");
+
+    this.httpClient.get('/backend/api/file/base64', {
       headers: {
         "Authorization": apiToken
       },
@@ -186,18 +244,12 @@ export class AppComponent implements OnInit {
   }
 
   showSignResultCallback(docSignedBase64) {
-    /*const source = `data:application/pdf;base64,${docSignedBase64}`;
-    const link = document.createElement("a");
-    link.href = source;
-    link.download = "aaaa_resultado.pdf";
-    link.click();*/
-
     let apiToken = localStorage.getItem("apiToken");
 
     const formData = new FormData();
     formData.append("file", docSignedBase64);
 
-    AutoScript.httpClient.post("/backend/api/file", formData,
+    AutoScript.httpClient.post("/backend/api/file/base64", formData,
       {
         withCredentials: true,
         headers: {
