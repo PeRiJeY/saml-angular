@@ -144,22 +144,8 @@ export class AppComponent implements OnInit {
       headers: {
         "Authorization": apiToken
       },
-      responseType: 'blob'
-    }).subscribe(r => this.doPDFtoBase64(r));
-  }
-
-  doPDFtoBase64(binaryResp) {
-    var self = this;
-    var reader = new FileReader();
-    reader.readAsDataURL(binaryResp);
-    reader.onloadend = function() {
-      var base64data =  reader.result.toString();
-      //console.log("indice" + base64data.indexOf(','));
-      base64data = base64data.substr(base64data.indexOf(',') + 1);
-
-      //console.log(base64data);
-      self.doFirmarPDF(base64data);
-    }
+      responseType: 'text'
+    }).subscribe(r => this.doFirmarPDF(r));
   }
 
   doFirmarPDF(base64data) {
@@ -211,7 +197,7 @@ export class AppComponent implements OnInit {
     const formData = new FormData();
     formData.append("file", docSignedBase64);
 
-    AutoScript.httpClient.post("http://samlintegration.sandetel.int:8081/obligaciones/api/file", formData,
+    AutoScript.httpClient.post("/backend/api/file", formData,
       {
         withCredentials: true,
         headers: {
