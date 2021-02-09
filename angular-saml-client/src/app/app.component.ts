@@ -119,9 +119,11 @@ export class AppComponent implements OnInit {
   callApiExternal() {
     let apiToken = localStorage.getItem("apiToken");
 
-    this.httpClient.get<JSON>('/backend/siraoNt/getSiraoNt/1', {
+    let cola = Math.floor(Math.random() * 2) + 1;
+
+    this.httpClient.get<JSON>('/backend/test/sendJMS'+cola, {
       headers: {
-        "Authorization": apiToken
+        "Authorization": apiToken ? apiToken : ""
       }
     }).subscribe(r => this.externalServerApiExample = r);
   }
@@ -265,6 +267,27 @@ export class AppComponent implements OnInit {
 
   showErrorCallback(errorType, errorMessage) {
     console.log("Type: " + errorType + "\nMessage: " + errorMessage);
+  }
+
+  onFileSelect(event) {
+    var selectedFile = event.target.files[0];
+    console.log(selectedFile.name);
+
+    let apiToken = localStorage.getItem("apiToken");
+    const formData = new FormData();
+    formData.append("file", selectedFile, selectedFile.name);
+
+    this.httpClient.post("http://localhost:8082/file/api/file", formData,
+      {
+        withCredentials: true,
+        headers: {
+          "Authorization": apiToken != null ? apiToken : ''
+         // "Content-Type": "multipart/form-data"
+        }
+      }
+      ).subscribe(
+        r => { console.log(r)},
+        error => console.log(error));
   }
 
 }

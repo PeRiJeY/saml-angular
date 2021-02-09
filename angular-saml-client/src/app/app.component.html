@@ -26,6 +26,7 @@
   <button style="margin-top: 15px" (click)=firmarPDF()>Firma documento</button>
   <button style="margin-top: 15px" (click)=descargarPDFBase64()>Descargar doc Base64</button>
   <button style="margin-top: 15px" (click)=descargarPDFBlob()>Descargar doc Blob</button>
+  <input type="file" (change)="onFileSelect($event)">
 
   <div *ngIf="!logoutSuccess">
 
