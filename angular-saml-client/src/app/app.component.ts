@@ -121,7 +121,7 @@ export class AppComponent implements OnInit {
 
     let cola = Math.floor(Math.random() * 2) + 1;
 
-    this.httpClient.get<JSON>('/backend/test/sendJMS'+cola, {
+    this.httpClient.get<JSON>('/backend/test/toPDF', {
       headers: {
         "Authorization": apiToken ? apiToken : ""
       }
@@ -165,7 +165,7 @@ export class AppComponent implements OnInit {
   descargarPDFBase64() {
     let apiToken = localStorage.getItem("apiToken");
 
-    this.httpClient.get('/backend/api/file/base64', {
+    this.httpClient.get('/backend/test/toPDFBase64', {
       headers: {
         "Authorization": apiToken
       },
@@ -182,7 +182,7 @@ export class AppComponent implements OnInit {
   descargarPDFBlob() {
     let apiToken = localStorage.getItem("apiToken");
 
-    this.httpClient.get('/backend/api/file', {
+    this.httpClient.get('/backend/test/toPDF', {
       headers: {
         "Authorization": apiToken
       },
@@ -200,7 +200,7 @@ export class AppComponent implements OnInit {
   firmarPDF() {
     let apiToken = localStorage.getItem("apiToken");
 
-    this.httpClient.get('/backend/api/file/base64', {
+    this.httpClient.get('/backend/test/toPDFBase64', {
       headers: {
         "Authorization": apiToken
       },
@@ -246,7 +246,16 @@ export class AppComponent implements OnInit {
   }
 
   showSignResultCallback(docSignedBase64) {
-    let apiToken = localStorage.getItem("apiToken");
+
+    // Para descargarlo
+    const source = `data:application/pdf;base64,${docSignedBase64}`;
+    const link = document.createElement("a");
+    link.href = source;
+    link.download = "aaaa_resultado.pdf";
+    link.click();
+
+    // Para enviarlo al servidor
+    /*let apiToken = localStorage.getItem("apiToken");
 
     const formData = new FormData();
     formData.append("file", docSignedBase64);
@@ -260,7 +269,7 @@ export class AppComponent implements OnInit {
       }
       ).subscribe(
         r => { console.log(r)},
-        error => console.log(error));
+        error => console.log(error));*/
 
     console.log("Firma OK");
   }
