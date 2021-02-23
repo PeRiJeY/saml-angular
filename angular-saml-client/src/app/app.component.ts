@@ -77,11 +77,19 @@ export class AppComponent implements OnInit {
   }
 
   postLogin() {
-    var formData: any = new FormData();
-    formData.append("username", 'juange');
-    formData.append("password", 'juange');
+    let usuarioTrewa = {};
+    usuarioTrewa["apellidos"] = null;
+    usuarioTrewa["identificador"] = null;
+    usuarioTrewa["jndi"] = null;
+    usuarioTrewa["nombre"] = null;
+    usuarioTrewa["password"] = 'juange';
+    usuarioTrewa["passwordCredencial"] = null;
+    usuarioTrewa["perfiles"] = null;
+    usuarioTrewa["sistema"] = null;
+    usuarioTrewa["usuario"] = 'juange';
+    usuarioTrewa["usuarioCredencial"] = null;
 
-    this.httpClient.post("/backend_auth/auth/login", formData,
+    this.httpClient.post("/backend_auth/auth/login", usuarioTrewa,
       {
         withCredentials: true,
         responseType: 'text'
@@ -121,7 +129,7 @@ export class AppComponent implements OnInit {
 
     let cola = Math.floor(Math.random() * 2) + 1;
 
-    this.httpClient.get<JSON>('/backend/test/toPDF', {
+    this.httpClient.get<JSON>('/backend/siraoNt/getSiraoNt/1', {
       headers: {
         "Authorization": apiToken ? apiToken : ""
       }

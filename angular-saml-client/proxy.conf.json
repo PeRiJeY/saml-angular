@@ -1,16 +1,16 @@
 {
   "/backend_auth": {
-    "target": "http://samlintegration.sandetel.int:8080",
+    "target": "http://samlintegration.sandetel.int:8780",
     "secure": false,
     "pathRewrite": {
-      "^/backend_auth": "/SpringSAMLIntegrationExample"
+      "^/backend_auth": "/medioambiente/sira-autenticacion-backend"
     }
   },
   "/backend": {
-    "target": "http://samlintegration.sandetel.int:8081",
+    "target": "http://samlintegration.sandetel.int:8700",
     "secure": false,
     "pathRewrite": {
-      "^/backend": "/obligaciones"
+      "^/backend": "/medioambiente/sira-obligaciones-backend"
     }
   }
 }
