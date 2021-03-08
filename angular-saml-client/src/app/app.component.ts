@@ -25,6 +25,8 @@ export class AppComponent implements OnInit {
 
   externalServerApiExample: JSON;
 
+  userWS: String;
+
   logoutSuccess: boolean;
 
   authServerApiExample: string;
@@ -96,6 +98,21 @@ export class AppComponent implements OnInit {
       }
       ).subscribe(
         r => { this.setSessionCookie(r)},
+        error => this.handleTokenError(error));
+  }
+
+  postLoginWS() {
+    const formData = new FormData();
+    formData.append("username", "99999999R");
+    formData.append("password", "asdfasdfA1");
+
+    this.httpClient.post("/backend_auth/auth/loginWS", formData,
+      {
+        withCredentials: true,
+        responseType: 'text'
+      }
+      ).subscribe(
+        r => { this.userWS = r},
         error => this.handleTokenError(error));
   }
 

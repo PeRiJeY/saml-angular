@@ -13,6 +13,8 @@
 
   <button style="margin-top: 15px" (click)=logout()>SAML Logout</button>
 
+  <button style="margin-top: 15px" (click)=postLoginWS()>Login para Web Service</button>
+
   <div>2º Get token from auth server</div>
   <button style="margin-top: 15px" (click)=getToken()>Get Token</button>
 
@@ -36,6 +38,10 @@
 
     <div *ngIf="apiToken">
       API Token: {{ apiToken }}
+    </div>
+
+    <div *ngIf="userWS">
+      User Login Web Service: {{ userWS }}
     </div>
 
     <div *ngIf="authServerApiExample" style="margin-top: 15px">
